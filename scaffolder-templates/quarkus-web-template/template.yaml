@@ -91,28 +91,41 @@ spec:
 #                  default: latest
 #                  type: string
 #                  description: Build Image tag
+
+#    - title: Application repository Information
+#      required:
+#        - repo
+#      properties:
+#        repo:
+#          title: Repository Location
+#          type: object
+#          properties:
+#            host:
+#              title: Repo Host
+#              type: string
+#              description: Your SCM host
+#              default: github.com
+#              enum:
+#                - github.com
+#            owner:
+#              title: Repo Owner
+#              type: string
+#              description: Your SCM host organization/group
+#              default: RedHatNordicsSA
+#              enum:
+#                - RedHatNordicsSA
+
     - title: Application repository Information
       required:
-        - repo
+        - repoUrl
       properties:
-        repo:
+        repoUrl:
           title: Repository Location
-          type: object
-          properties:
-            host:
-              title: Repo Host
-              type: string
-              description: Your SCM host
-              default: github.com
-              enum:
-                - github.com
-            owner:
-              title: Repo Owner
-              type: string
-              description: Your SCM host organization/group
-              default: RedHatNordicsSA
-              enum:
-                - RedHatNordicsSA
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
 
   steps:
     - id: template
@@ -136,11 +149,21 @@ spec:
           quay_destination: ${{ parameters.image_organization}}/${{ parameters.component_id }}
           port: 8080
 
+#    - id: publish
+#      name: Publish
+#      action: publish:gitlab
+#      input:
+#        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.repo.owner }}&repo=${{parameters.component_id}}"
+#        repoVisibility: public
+        
     - id: publish
-      name: Publish
-      action: publish:gitlab
+      name: Publishing to Source Code Repository
+      action: publish:github
       input:
-        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.repo.owner }}&repo=${{parameters.component_id}}"
+        description: This is ${{ parameters.component_id }}
+        repoUrl: ${{ parameters.repoUrl }}
+        defaultBranch: main
+        protectDefaultBranch: false
         repoVisibility: public
 
     - id: register
@@ -175,11 +198,21 @@ spec:
           deployment_name: quarkus-template
         targetPath: ./tenant-gitops
 
+#    - id: publish-gitops
+#      name: Publishing to Resource Repository
+#      action: publish:gitlab
+#      input:
+#        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.repo.owner }}&repo=${{parameters.component_id}}-gitops"
+#        title: gitops resources for ${{ parameters.component_id }}
+#        description: gitops resources for ${{ parameters.component_id }}
+#        sourcePath: ./tenant-gitops
+#        repoVisibility: public
+
     - id: publish-gitops
       name: Publishing to Resource Repository
-      action: publish:gitlab
+      action: publish:github
       input:
-        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.repo.owner }}&repo=${{parameters.component_id}}-gitops"
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
         title: gitops resources for ${{ parameters.component_id }}
         description: gitops resources for ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
