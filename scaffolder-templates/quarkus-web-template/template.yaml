@@ -45,6 +45,15 @@ spec:
           type: string
           description: Help others understand what this website is for.
           default: A cool quarkus app
+        #added from the other template
+        owner:
+          title: Owner
+          type: string
+          description: IdP owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Provide Image Registry Information
       required:
         - image_registry
@@ -142,10 +151,12 @@ spec:
           group_id: ${{ parameters.group_id }}
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
-          owner: ${{ user.entity.metadata.name }}
+#          owner: ${{ user.entity.metadata.name }}
+          owner: ${{ parameters.owner }}
           cluster: .apps.rh-ocp-01.cool.lab
           host: ${{ parameters.repo.host }}
-          destination: ${{ parameters.repo.owner }}/${{ parameters.component_id }}
+#          destination: ${{ parameters.repo.owner }}/${{ parameters.component_id }}
+          destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           quay_destination: ${{ parameters.image_organization}}/${{ parameters.component_id }}
           port: 8080
 
@@ -182,10 +193,14 @@ spec:
         values:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
-          destination: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{parameters.component_id}}-gitops.git
-          source_repository: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{parameters.component_id}}.git
-          repository_name: ${{parameters.component_id}}
-          git_owner: ${{ parameters.repo.owner }}
+#          destination: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{parameters.component_id}}-gitops.git
+          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
+#          source_repository: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{parameters.component_id}}.git
+          source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          #repository_name: ${{parameters.component_id}}
+          repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+#          git_owner: ${{ parameters.repo.owner }}
+          git_owner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
           cluster: .apps.rh-ocp-01.cool.lab
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
@@ -218,15 +233,15 @@ spec:
         sourcePath: ./tenant-gitops
         repoVisibility: public
 
-    - id: create-argocd-resources
-      name: Create ArgoCD Resources
-      action: argocd:create-resources
-      input:
-        appName: ${{ parameters.component_id }}-bootstrap
-        argoInstance: main
-        namespace: janus-argocd
-        repoUrl: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{ parameters.component_id }}-gitops.git
-        path: 'argocd/'
+#    - id: create-argocd-resources
+#      name: Create ArgoCD Resources
+#      action: argocd:create-resources
+#      input:
+#        appName: ${{ parameters.component_id }}-bootstrap
+#        argoInstance: main
+#        namespace: janus-argocd
+#        repoUrl: https://${{ parameters.repo.host }}/${{ parameters.repo.owner }}/${{ parameters.component_id }}-gitops.git
+#        path: 'argocd/'
 
   output:
     links:
