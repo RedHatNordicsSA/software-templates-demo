@@ -48,7 +48,7 @@ spec:
         #added from the other template
         owner:
           title: Owner
-          default: earvonen
+          default: 'user:earvonen'
           type: string
           description: IdP owner of the component
 #          ui:field: OwnerPicker
