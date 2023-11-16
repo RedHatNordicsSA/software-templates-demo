@@ -48,6 +48,7 @@ spec:
         #added from the other template
         owner:
           title: Owner
+          default: RedHatNordicsSA
           type: string
           description: IdP owner of the component
           ui:field: OwnerPicker
@@ -152,7 +153,7 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
 #          owner: ${{ user.entity.metadata.name }}
-          owner: ${{ parameters.owner }}
+#          owner: ${{ parameters.owner }}
           cluster: .apps.rh-ocp-01.cool.lab
           host: ${{ parameters.repo.host }}
 #          destination: ${{ parameters.repo.owner }}/${{ parameters.component_id }}
