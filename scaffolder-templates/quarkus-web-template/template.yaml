@@ -48,13 +48,13 @@ spec:
         #added from the other template
         owner:
           title: Owner
-          default: 'user:earvonen'
+#          default: 'user:earvonen'
           type: string
           description: IdP owner of the component
-#          ui:field: OwnerPicker
-#          ui:options:
-#            allowedKinds:
-#              - Group
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Provide Image Registry Information
       required:
         - image_registry
