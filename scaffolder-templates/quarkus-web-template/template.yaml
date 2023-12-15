@@ -136,6 +136,8 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
+            allowedOwners:
+              - RedHatNordicsSA
 
   steps:
     - id: template
