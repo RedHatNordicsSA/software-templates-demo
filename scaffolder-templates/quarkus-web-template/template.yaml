@@ -64,7 +64,7 @@ spec:
           type: string
           enum:
             - Openshift
-            - Quay
+#            - Quay
       dependencies:
         image_registry:
           oneOf:
