@@ -157,7 +157,7 @@ spec:
 #          owner: ${{ user.entity.metadata.name }}
           owner: ${{ parameters.owner }}
           cluster: .apps.rh-ocp-01.cool.lab
-          host: ${{ parameters.repoUrl }}
+          host: ${{ (parameters.repoUrl | parseRepoUrl) }}
 #          destination: ${{ parameters.repo.owner }}/${{ parameters.component_id }}
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           quay_destination: ${{ parameters.image_organization}}/${{ parameters.component_id }}
