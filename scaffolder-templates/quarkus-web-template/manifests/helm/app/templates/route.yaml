@@ -4,7 +4,6 @@ kind: Route
 metadata:
   labels:
     {{- include "quarkus-template.labels" $ | nindent 4 }}
-    {{- include "backstage.labels" . | nindent 4 }}
   name: {{ include "quarkus-template.fullname" $ }}
 spec:
   {{- if .host }}
