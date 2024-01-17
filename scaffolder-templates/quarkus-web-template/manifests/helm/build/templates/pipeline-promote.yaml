@@ -35,6 +35,7 @@ spec:
     - description: The name of the component
       name: component-id
       type: string
+      default: {{ .Values.app.name }}
     - description: Common password used in demo
       name: common-password-secret
       type: string
