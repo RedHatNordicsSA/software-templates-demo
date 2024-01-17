@@ -24,6 +24,8 @@ spec:
       default: latest
     - name: namespace
       type: string
+      description: Parameter to determine target environment. If this value contains 'preprod', then the application will be promoted to preprod, otherwise it will be promoted to prod.
+      default: preprod
     - description: The hostname of the git instance
       name: git-host
       type: string
